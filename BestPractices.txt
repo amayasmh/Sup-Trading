@@ -1,0 +1,5 @@
+## Nom dossiers/fichiers : CamelCase
+## Noms de fonctions : CamelCase
+## Noms de variables : camelCase
+## Docstring : description des fonctions + input + output
+## Commenter les parties importantes du code
