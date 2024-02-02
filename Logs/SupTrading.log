@@ -1,0 +1,6 @@
+2024-02-02 10:27:43,867 - __main__ - INFO - Starting main function
+2024-02-02 10:27:43,873 - Modules.DatabaseConnection - INFO - Database config loaded
+2024-02-02 10:27:43,873 - Modules.DatabaseConnection - INFO - Connecting to the PostgreSQL database...
+2024-02-02 10:27:44,030 - Modules.DatabaseConnection - INFO - Connected to the PostgreSQL database
+2024-02-02 10:27:44,045 - Modules.DatabaseConnection - INFO - SQL executed successfully
+2024-02-02 10:27:44,045 - Modules.DatabaseConnection - INFO - Database connection closed.
