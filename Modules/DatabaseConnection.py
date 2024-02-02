@@ -1,9 +1,9 @@
-# Description: This script contains functions to connect to database, execute sql query and close connection
+# Description: This module contains functions to connect to database, execute sql query and close connection
 
 
+import configparser
 import psycopg2
 import psycopg2.extras
-import configparser
 import logging
 
 ConfigFile = "./Config/config.ini"
