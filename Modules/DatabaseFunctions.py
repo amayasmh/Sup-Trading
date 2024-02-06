@@ -2,9 +2,9 @@
 
 
 import configparser
+import logging
 import psycopg2
 import psycopg2.extras
-import logging
 
 ConfigFile = "./Config/config.ini"
 LogsFile = "./Logs/SupTrading.log"
@@ -48,7 +48,7 @@ def Connect():
             conn = psycopg2.connect(**Params)
             logger.info('Connected to the PostgreSQL database')
         except Exception as error:
-            logger.error(f'Error while connecting to the database : {error}', exc_info=True)
+            logger.error(f'Error while connecting to the database: {error}', exc_info=True)
             raise error
         # close the communication with the PostgreSQL
         return conn
@@ -66,28 +66,42 @@ def Close(Conn):
             logger.error(f'{error}', exc_info=True)
             return error
     else:
-        logger.error('Error closing database connection : connection is None')
-        return Exception('Error closing database connection : connection is None')
+        logger.error('Error closing database connection: connection is None')
+        return Exception('Error closing database connection: connection is None')
     
-## function to execute the sql query with connection object and sql query as input, returns the result of the query if successful
-def Execute(Conn, Sql):
+## function to execute the sql query with connection object and sql query as input, returns true if successful
+def Execute(Conn, Sql, Data=None):
     try:
         Cur = Conn.cursor()
+        Cur.execute(Sql, Data)
         Conn.commit()
-        Cur.execute(Sql)
         logger.info('SQL executed successfully')
-        Result = Cur.fetchall()
+        # Result = Cur.fetchall()
         Cur.close()
-        return Result
+        return True
     except (Exception, psycopg2.DatabaseError) as error:
-        logger.error(f'{error}', exc_info=True)
+        logger.error(f'Error while executing query: {error}', exc_info=True)
         raise error
 
-
-# if __name__ == '__main__':
-#     logger.info('Starting main function')
-#     Connection = Connect()
-#     Query = 'SELECT version()'
-#     print('PostgreSQL database version:')
-#     print(Execute(Connection, Query))
-#     Close(Connection)
+## function to create the tables in the database, executed only once at the beginning
+def CreateTables():
+    try:
+        Connection = Connect()
+        Query = '''DROP TABLE IF EXISTS CAC40;
+        CREATE TABLE IF NOT EXISTS CAC40 (
+            id SERIAL PRIMARY KEY,
+            company VARCHAR(255) NOT NULL,
+            price VARCHAR(255) NOT NULL,
+            variation VARCHAR(25) NOT NULL,
+            open VARCHAR(255) NOT NULL,
+            high VARCHAR(255) NOT NULL,
+            low VARCHAR(255) NOT NULL,
+            volume VARCHAR(255) NOT NULL,
+            trade_date VARCHAR(255) NOT NULL,
+            save_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+        );'''
+        Execute(Connection, Query)
+        Close(Connection)
+    except Exception as e:
+        logging.error(f"Error while creating tables: {e}")
+        raise e

@@ -21,20 +21,20 @@ logging.basicConfig(level=logging.ERROR, filename= LogsFile,
                     filemode="a", format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-## Function to save data to a csv file with 
-def SaveData(data: dict, filename: str):
+
+## Function to save Data to a csv file with 
+def SaveDataCsv(Data: dict, filename: str):
     # Si le fichier n'existe pas, écrivez le header
     if not os.path.isfile(filename):
         with open(filename, 'a', newline='') as csvfile:
-            writer = csv.DictWriter(csvfile, fieldnames=data[0].keys())
+            writer = csv.DictWriter(csvfile, fieldnames=Data[0].keys())
             writer.writeheader()
-
     # Écrire les données dans le fichier
     with open(filename, 'a', newline='') as csvfile:
-        writer = csv.DictWriter(csvfile, fieldnames=data[0].keys())
-        writer.writerows(data)
+        writer = csv.DictWriter(csvfile, fieldnames=Data[0].keys())
+        writer.writerows(Data)
 
-## Scraping function for Boursorama website to get CAC40 data, returns a dictionary if successful
+## Scraping function for Boursorama website to get CAC40 Data, returns a dictionary if successful
 def SupTradingScraperCAC40(url: str, header: dict):
     logging.info("Starting scraper...")
     try:
@@ -46,21 +46,48 @@ def SupTradingScraperCAC40(url: str, header: dict):
     Soup = BeautifulSoup(Response.content, "html.parser")
     logging.info("Parsing HTML...")
     CodeHtml = Soup.find('div', class_='c-faceplate c-faceplate--index is-positive /*debug*/')
-    data = {}
-    data["company"] = CodeHtml.find('a', class_='c-faceplate__company-link').text.strip()
-    data["price"] = CodeHtml.find('span', class_='c-instrument c-instrument--last').text
-    data["variation"] = CodeHtml.find('span', class_='c-instrument c-instrument--variation').text
-    data['open'] = CodeHtml.find('span', class_='c-instrument c-instrument--open').text
-    data['high'] = CodeHtml.find('span', class_='c-instrument c-instrument--high').text
-    data['low'] = CodeHtml.find('span', class_='c-instrument c-instrument--low').text
-    data['volume'] = CodeHtml.find('span', class_='c-instrument c-instrument--low').text
-    data['tradeDate'] = CodeHtml.find('span', class_='c-instrument c-instrument--tradedate').text
-    data['saveDate'] = datetime.today()
+    Data = {}
+    try:
+        Data["company"] = CodeHtml.find('a', class_='c-faceplate__company-link').text.strip()
+    except Exception as e:
+        logging.error(f"Error while parsing company: {e}")
+        Data["company"] = None
+    try:
+        Data["price"] = CodeHtml.find('span', class_='c-instrument c-instrument--last').text
+    except Exception as e:
+        logging.error(f"Error while parsing price: {e}")
+        Data["price"] = None
+    try:
+        Data["variation"] = CodeHtml.find('span', class_='c-instrument c-instrument--variation').text
+    except Exception as e:
+        logging.error(f"Error while parsing variation: {e}")
+        Data["variation"] = None
+    try:
+        Data['open'] = CodeHtml.find('span', class_='c-instrument c-instrument--open').text
+    except Exception as e:
+        logging.error(f"Error while parsing open: {e}")
+        Data['open'] = None
+    try:
+        Data['high'] = CodeHtml.find('span', class_='c-instrument c-instrument--high').text
+    except Exception as e:
+        logging.error(f"Error while parsing high: {e}")
+        Data['high'] = None
+    try: 
+        Data['low'] = CodeHtml.find('span', class_='c-instrument c-instrument--low').text
+    except Exception as e:
+        logging.error(f"Error while parsing low: {e}")
+        Data['low'] = None
+    try:
+        Data['volume'] = CodeHtml.find('span', class_='c-instrument c-instrument--low').text
+    except Exception as e:
+        logging.error(f"Error while parsing volume: {e}")
+        Data['volume'] = None
+    try:
+        Data['tradeDate'] = CodeHtml.find('span', class_='c-instrument c-instrument--tradedate').text
+    except Exception as e:
+        logging.error(f"Error while parsing tradeDate: {e}")
+        Data['tradeDate'] = None
+
+    # Data['saveDate'] = datetime.today()
     logging.info("Scraper finished")
-    return data
-
-
-# if __name__ == "__main__":
-#     Result = SupTradingScraperCAC40("https://www.boursorama.com/bourse/indices/cours/1rPCAC/", {})
-#     print(Result)
-#     SaveData([Result], DataFile)
+    return Data

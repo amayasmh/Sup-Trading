@@ -1,0 +1,113 @@
+2024-02-04 15:19:33,844 - __main__ - INFO - Starting main function
+2024-02-04 15:19:33,844 - Modules.DatabaseFunctions - INFO - Database config loaded
+2024-02-04 15:19:33,844 - Modules.DatabaseFunctions - INFO - Connecting to the PostgreSQL database...
+2024-02-04 15:19:34,034 - Modules.DatabaseFunctions - INFO - Connected to the PostgreSQL database
+2024-02-04 15:19:34,058 - Modules.DatabaseFunctions - INFO - SQL executed successfully
+2024-02-04 15:19:34,058 - Modules.DatabaseFunctions - INFO - Database connection closed.
+2024-02-04 15:19:34,058 - root - INFO - Starting scraper...
+2024-02-04 15:19:35,096 - root - INFO - Request successful
+2024-02-04 15:19:35,335 - root - INFO - Parsing HTML...
+2024-02-04 15:19:35,335 - root - INFO - Scraper finished
+2024-02-04 15:19:35,343 - Modules.DatabaseFunctions - INFO - Database config loaded
+2024-02-04 15:19:35,343 - Modules.DatabaseFunctions - INFO - Connecting to the PostgreSQL database...
+2024-02-04 15:19:35,404 - Modules.DatabaseFunctions - INFO - Connected to the PostgreSQL database
+2024-02-04 15:19:35,404 - Modules.DatabaseFunctions - INFO - SQL executed successfully
+2024-02-04 15:19:35,404 - Modules.DatabaseFunctions - INFO - Database connection closed.
+2024-02-04 15:19:36,765 - __main__ - INFO - Starting main function
+2024-02-04 15:19:36,765 - Modules.DatabaseFunctions - INFO - Database config loaded
+2024-02-04 15:19:36,765 - Modules.DatabaseFunctions - INFO - Connecting to the PostgreSQL database...
+2024-02-04 15:19:36,843 - Modules.DatabaseFunctions - INFO - Connected to the PostgreSQL database
+2024-02-04 15:19:36,875 - Modules.DatabaseFunctions - INFO - SQL executed successfully
+2024-02-04 15:19:36,875 - Modules.DatabaseFunctions - INFO - Database connection closed.
+2024-02-04 15:19:36,875 - root - INFO - Starting scraper...
+2024-02-04 15:19:37,165 - root - INFO - Request successful
+2024-02-04 15:19:37,391 - root - INFO - Parsing HTML...
+2024-02-04 15:19:37,399 - root - INFO - Scraper finished
+2024-02-04 15:19:37,401 - Modules.DatabaseFunctions - INFO - Database config loaded
+2024-02-04 15:19:37,401 - Modules.DatabaseFunctions - INFO - Connecting to the PostgreSQL database...
+2024-02-04 15:19:37,475 - Modules.DatabaseFunctions - INFO - Connected to the PostgreSQL database
+2024-02-04 15:19:37,483 - Modules.DatabaseFunctions - INFO - SQL executed successfully
+2024-02-04 15:19:37,483 - Modules.DatabaseFunctions - INFO - Database connection closed.
+2024-02-04 15:27:45,500 - __main__ - INFO - Starting main function
+2024-02-04 15:27:45,500 - Modules.DatabaseFunctions - INFO - Database config loaded
+2024-02-04 15:27:45,500 - Modules.DatabaseFunctions - INFO - Connecting to the PostgreSQL database...
+2024-02-04 15:27:45,579 - Modules.DatabaseFunctions - INFO - Connected to the PostgreSQL database
+2024-02-04 15:27:45,610 - Modules.DatabaseFunctions - INFO - SQL executed successfully
+2024-02-04 15:27:45,610 - Modules.DatabaseFunctions - INFO - Database connection closed.
+2024-02-04 15:27:45,610 - root - INFO - Starting scraper...
+2024-02-04 15:27:56,786 - root - ERROR - Request failed: HTTPSConnectionPool(host='www.boursorama.com', port=443): Max retries exceeded with url: /bourse/indices/cours/1rPCAC/ (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x0000015FEF991810>: Failed to resolve 'www.boursorama.com' ([Errno 11001] getaddrinfo failed)"))
+2024-02-04 15:28:09,321 - __main__ - INFO - Starting main function
+2024-02-04 15:28:09,321 - Modules.DatabaseFunctions - INFO - Database config loaded
+2024-02-04 15:28:09,321 - Modules.DatabaseFunctions - INFO - Connecting to the PostgreSQL database...
+2024-02-04 15:28:09,414 - Modules.DatabaseFunctions - INFO - Connected to the PostgreSQL database
+2024-02-04 15:28:09,446 - Modules.DatabaseFunctions - INFO - SQL executed successfully
+2024-02-04 15:28:09,446 - Modules.DatabaseFunctions - INFO - Database connection closed.
+2024-02-04 15:28:09,446 - root - INFO - Starting scraper...
+2024-02-04 15:28:10,547 - root - INFO - Request successful
+2024-02-04 15:28:10,704 - root - INFO - Parsing HTML...
+2024-02-04 15:28:10,704 - root - INFO - Scraper finished
+2024-02-04 15:28:10,704 - Modules.DatabaseFunctions - INFO - Database config loaded
+2024-02-04 15:28:10,704 - Modules.DatabaseFunctions - INFO - Connecting to the PostgreSQL database...
+2024-02-04 15:28:10,768 - Modules.DatabaseFunctions - INFO - Connected to the PostgreSQL database
+2024-02-04 15:28:10,768 - Modules.DatabaseFunctions - INFO - SQL executed successfully
+2024-02-04 15:28:10,768 - Modules.DatabaseFunctions - INFO - Database connection closed.
+2024-02-04 15:28:16,765 - __main__ - INFO - Starting main function
+2024-02-04 15:28:16,765 - Modules.DatabaseFunctions - INFO - Database config loaded
+2024-02-04 15:28:16,765 - Modules.DatabaseFunctions - INFO - Connecting to the PostgreSQL database...
+2024-02-04 15:28:16,828 - Modules.DatabaseFunctions - INFO - Connected to the PostgreSQL database
+2024-02-04 15:28:16,859 - Modules.DatabaseFunctions - INFO - SQL executed successfully
+2024-02-04 15:28:16,859 - Modules.DatabaseFunctions - INFO - Database connection closed.
+2024-02-04 15:28:16,859 - root - INFO - Starting scraper...
+2024-02-04 15:28:17,725 - root - INFO - Request successful
+2024-02-04 15:28:17,913 - root - INFO - Parsing HTML...
+2024-02-04 15:28:17,913 - root - INFO - Scraper finished
+2024-02-04 15:28:17,913 - Modules.DatabaseFunctions - INFO - Database config loaded
+2024-02-04 15:28:17,913 - Modules.DatabaseFunctions - INFO - Connecting to the PostgreSQL database...
+2024-02-04 15:28:17,961 - Modules.DatabaseFunctions - INFO - Connected to the PostgreSQL database
+2024-02-04 15:28:17,976 - Modules.DatabaseFunctions - INFO - SQL executed successfully
+2024-02-04 15:28:17,976 - Modules.DatabaseFunctions - INFO - Database connection closed.
+2024-02-04 15:28:25,031 - __main__ - INFO - Starting main function
+2024-02-04 15:28:25,031 - Modules.DatabaseFunctions - INFO - Database config loaded
+2024-02-04 15:28:25,031 - Modules.DatabaseFunctions - INFO - Connecting to the PostgreSQL database...
+2024-02-04 15:28:25,094 - Modules.DatabaseFunctions - INFO - Connected to the PostgreSQL database
+2024-02-04 15:28:25,109 - Modules.DatabaseFunctions - INFO - SQL executed successfully
+2024-02-04 15:28:25,109 - Modules.DatabaseFunctions - INFO - Database connection closed.
+2024-02-04 15:28:25,109 - root - INFO - Starting scraper...
+2024-02-04 15:28:25,504 - root - INFO - Request successful
+2024-02-04 15:28:25,678 - root - INFO - Parsing HTML...
+2024-02-04 15:28:25,678 - root - INFO - Scraper finished
+2024-02-04 15:28:25,678 - Modules.DatabaseFunctions - INFO - Database config loaded
+2024-02-04 15:28:25,678 - Modules.DatabaseFunctions - INFO - Connecting to the PostgreSQL database...
+2024-02-04 15:28:25,740 - Modules.DatabaseFunctions - INFO - Connected to the PostgreSQL database
+2024-02-04 15:28:25,740 - Modules.DatabaseFunctions - INFO - SQL executed successfully
+2024-02-04 15:28:25,740 - Modules.DatabaseFunctions - INFO - Database connection closed.
+2024-02-04 15:29:28,820 - __main__ - INFO - Starting main function
+2024-02-04 15:29:28,820 - root - INFO - Starting scraper...
+2024-02-04 15:29:29,230 - root - INFO - Request successful
+2024-02-04 15:29:29,403 - root - INFO - Parsing HTML...
+2024-02-04 15:29:29,403 - root - INFO - Scraper finished
+2024-02-04 15:29:29,419 - Modules.DatabaseFunctions - INFO - Database config loaded
+2024-02-04 15:29:29,419 - Modules.DatabaseFunctions - INFO - Connecting to the PostgreSQL database...
+2024-02-04 15:29:29,466 - Modules.DatabaseFunctions - INFO - Connected to the PostgreSQL database
+2024-02-04 15:29:29,482 - Modules.DatabaseFunctions - INFO - SQL executed successfully
+2024-02-04 15:29:29,482 - Modules.DatabaseFunctions - INFO - Database connection closed.
+2024-02-04 15:29:33,118 - __main__ - INFO - Starting main function
+2024-02-04 15:29:33,118 - root - INFO - Starting scraper...
+2024-02-04 15:29:37,549 - root - INFO - Request successful
+2024-02-04 15:29:37,706 - root - INFO - Parsing HTML...
+2024-02-04 15:29:37,722 - root - INFO - Scraper finished
+2024-02-04 15:29:37,722 - Modules.DatabaseFunctions - INFO - Database config loaded
+2024-02-04 15:29:37,722 - Modules.DatabaseFunctions - INFO - Connecting to the PostgreSQL database...
+2024-02-04 15:29:37,800 - Modules.DatabaseFunctions - INFO - Connected to the PostgreSQL database
+2024-02-04 15:29:37,800 - Modules.DatabaseFunctions - INFO - SQL executed successfully
+2024-02-04 15:29:37,800 - Modules.DatabaseFunctions - INFO - Database connection closed.
+2024-02-04 15:29:40,816 - __main__ - INFO - Starting main function
+2024-02-04 15:29:40,816 - root - INFO - Starting scraper...
+2024-02-04 15:29:44,495 - root - INFO - Request successful
+2024-02-04 15:29:44,698 - root - INFO - Parsing HTML...
+2024-02-04 15:29:44,698 - root - INFO - Scraper finished
+2024-02-04 15:29:44,698 - Modules.DatabaseFunctions - INFO - Database config loaded
+2024-02-04 15:29:44,698 - Modules.DatabaseFunctions - INFO - Connecting to the PostgreSQL database...
+2024-02-04 15:29:44,761 - Modules.DatabaseFunctions - INFO - Connected to the PostgreSQL database
+2024-02-04 15:29:44,761 - Modules.DatabaseFunctions - INFO - SQL executed successfully
+2024-02-04 15:29:44,761 - Modules.DatabaseFunctions - INFO - Database connection closed.
