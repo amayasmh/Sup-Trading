@@ -53,37 +53,94 @@ def SupTradingScraperCAC40(url: str, header: dict):
         logging.error(f"Error while parsing company: {e}")
         Data["company"] = None
     try:
-        Data["price"] = CodeHtml.find('span', class_='c-instrument c-instrument--last').text
+        Data["price"] = CodeHtml.find('span', class_='c-instrument c-instrument--last').text.replace(' ', '')
     except Exception as e:
         logging.error(f"Error while parsing price: {e}")
         Data["price"] = None
     try:
-        Data["variation"] = CodeHtml.find('span', class_='c-instrument c-instrument--variation').text
+        Data["variation"] = CodeHtml.find('span', class_='c-instrument c-instrument--variation').text.replace('%', '')
     except Exception as e:
         logging.error(f"Error while parsing variation: {e}")
         Data["variation"] = None
     try:
-        Data['open'] = CodeHtml.find('span', class_='c-instrument c-instrument--open').text
+        Data['open'] = CodeHtml.find('span', class_='c-instrument c-instrument--open').text.replace(' ', '')
     except Exception as e:
         logging.error(f"Error while parsing open: {e}")
         Data['open'] = None
     try:
-        Data['high'] = CodeHtml.find('span', class_='c-instrument c-instrument--high').text
+        Data['high'] = CodeHtml.find('span', class_='c-instrument c-instrument--high').text.replace(' ', '')
     except Exception as e:
         logging.error(f"Error while parsing high: {e}")
         Data['high'] = None
     try: 
-        Data['low'] = CodeHtml.find('span', class_='c-instrument c-instrument--low').text
+        Data['low'] = CodeHtml.find('span', class_='c-instrument c-instrument--low').text.replace(' ', '')
     except Exception as e:
         logging.error(f"Error while parsing low: {e}")
         Data['low'] = None
     try:
-        Data['volume'] = CodeHtml.find('span', class_='c-instrument c-instrument--low').text
+        Data['volume'] = CodeHtml.find('span', class_='c-instrument c-instrument--low').text.replace(' ', '')
     except Exception as e:
         logging.error(f"Error while parsing volume: {e}")
         Data['volume'] = None
     try:
-        Data['tradeDate'] = CodeHtml.find('span', class_='c-instrument c-instrument--tradedate').text
+        Data['tradeDate'] = CodeHtml.find('span', class_='c-instrument c-instrument--tradedate').text.replace(' ', '')
+    except Exception as e:
+        logging.error(f"Error while parsing tradeDate: {e}")
+        Data['tradeDate'] = None
+
+    # Data['saveDate'] = datetime.today()
+    logging.info("Scraper finished")
+    return Data
+
+def SupTradingDayOffScraperCAC40(url: str, header: dict):
+    logging.info("Starting scraper...")
+    try:
+        Response = requests.get(url, headers=header)
+    except Exception as e:
+        logging.error(f"Request failed: {e}")
+        raise e
+    logging.info("Request successful")
+    Soup = BeautifulSoup(Response.content, "html.parser")
+    logging.info("Parsing HTML...")
+    CodeHtml = Soup.find('div', class_='c-faceplate c-faceplate--index is-negative /*debug*/')
+    Data = {}
+    try:
+        Data["company"] = CodeHtml.find('a', class_='c-faceplate__company-link').text.strip()
+    except Exception as e:
+        logging.error(f"Error while parsing company: {e}")
+        Data["company"] = None
+    try:
+        Data["price"] = CodeHtml.find('span', class_='c-instrument c-instrument--last').text.replace(' ', '')
+    except Exception as e:
+        logging.error(f"Error while parsing price: {e}")
+        Data["price"] = None
+    try:
+        Data["variation"] = CodeHtml.find('span', class_='c-instrument c-instrument--variation').text.replace(' ', '').replace('%', '')
+    except Exception as e:
+        logging.error(f"Error while parsing variation: {e}")
+        Data["variation"] = None
+    try:
+        Data['open'] = CodeHtml.find('span', class_='c-instrument c-instrument--open').text.replace(' ', '')
+    except Exception as e:
+        logging.error(f"Error while parsing open: {e}")
+        Data['open'] = None
+    try:
+        Data['high'] = CodeHtml.find('span', class_='c-instrument c-instrument--high').text.replace(' ', '')
+    except Exception as e:
+        logging.error(f"Error while parsing high: {e}")
+        Data['high'] = None
+    try: 
+        Data['low'] = CodeHtml.find('span', class_='c-instrument c-instrument--low').text.replace(' ', '')
+    except Exception as e:
+        logging.error(f"Error while parsing low: {e}")
+        Data['low'] = None
+    try:
+        Data['volume'] = CodeHtml.find('span', class_='c-instrument c-instrument--low').text.replace(' ', '')
+    except Exception as e:
+        logging.error(f"Error while parsing volume: {e}")
+        Data['volume'] = None
+    try:
+        Data['tradeDate'] = CodeHtml.find('span', class_='c-instrument c-instrument--tradedate').text.replace(' ', '')
     except Exception as e:
         logging.error(f"Error while parsing tradeDate: {e}")
         Data['tradeDate'] = None

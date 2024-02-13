@@ -91,13 +91,13 @@ def CreateTables():
         CREATE TABLE IF NOT EXISTS CAC40 (
             id SERIAL PRIMARY KEY,
             company VARCHAR(255) NOT NULL,
-            price VARCHAR(255) NOT NULL,
-            variation VARCHAR(25) NOT NULL,
-            open VARCHAR(255) NOT NULL,
-            high VARCHAR(255) NOT NULL,
-            low VARCHAR(255) NOT NULL,
-            volume VARCHAR(255) NOT NULL,
-            trade_date VARCHAR(255) NOT NULL,
+            price FLOAT NOT NULL,
+            variation FLOAT NOT NULL,
+            open FLOAT NOT NULL,
+            high FLOAT NOT NULL,
+            low FLOAT NOT NULL,
+            volume FLOAT NOT NULL,
+            trade_date TIMESTAMP NOT NULL,
             save_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
         );'''
         Execute(Connection, Query)
@@ -105,3 +105,4 @@ def CreateTables():
     except Exception as e:
         logging.error(f"Error while creating tables: {e}")
         raise e
+        
