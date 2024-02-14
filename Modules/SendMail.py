@@ -1,17 +1,19 @@
 # Description : This module contains the function to send email with the data as attachment
 
+
 import configparser
 from email.message import EmailMessage
 import logging
 import smtplib
 
+## Variables
 ConfigFile = "./Config/config.ini"
 LogsFile = "./Logs/SupTrading.log"
 
+## Logging configuration
 logging.basicConfig(level=logging.INFO, filename=LogsFile,
                     filemode="a", format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-
 
 logging.basicConfig(level=logging.ERROR, filename= LogsFile,
                     filemode="a", format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -60,6 +62,6 @@ def SendMail(To: list, Subject: str, Body: str, Attachment: str):
         raise error
 
 
-if __name__ == '__main__':
-    SendMail(["saghiraghiles5032@gmail.com"], "Test", "Test", "./Data/cac40.csv")
-    logger.info('Ending main function')
+# if __name__ == '__main__':
+#     SendMail(["saghiraghiles5032@gmail.com"], "Test", "Test", "./Data/cac40.csv")
+#     logger.info('Ending main function')

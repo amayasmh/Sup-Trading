@@ -6,13 +6,14 @@ import logging
 import psycopg2
 import psycopg2.extras
 
+## Variables
 ConfigFile = "./Config/config.ini"
 LogsFile = "./Logs/SupTrading.log"
 
+## Logging configuration
 logging.basicConfig(level=logging.INFO, filename=LogsFile,
                     filemode="a", format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-
 
 logging.basicConfig(level=logging.ERROR, filename= LogsFile,
                     filemode="a", format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
