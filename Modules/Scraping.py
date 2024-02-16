@@ -27,25 +27,25 @@ def SaveDataCsv(Data: dict, filename: str):
     if not Data:
         logging.error("Data is empty, cannot save to CSV.")
         return
-    
-    if not isinstance(Data, list) or not isinstance(Data[0], dict):
-        logging.error("Data is not in the expected format. Expected list of dictionaries.")
+    ## Vérifiez si Data est un dictionnaire
+    if not isinstance(Data, dict):
+        logging.error("Data is not in the expected format. Expected dictionary.")
         return
-    # if the file does not exist, create it and write the header
+    ## if the file does not exist, create it and write the header
     if not os.path.isfile(filename):
         with open(filename, 'a', newline='') as csvfile:
             try:
-                writer = csv.DictWriter(csvfile, fieldnames=Data[0].keys())
+                writer = csv.DictWriter(csvfile, fieldnames=Data.keys())
                 writer.writeheader()
                 logging.info(f"File {filename} created")
             except Exception as e:
                 logging.error(f"Error while creating csv: {e}")
                 raise e
-    # write the data to the file
+    ## write the data to the file
     with open(filename, 'a', newline='') as csvfile:
         try:
-            writer = csv.DictWriter(csvfile, fieldnames=Data[0].keys())
-            writer.writerows(Data)
+            writer = csv.DictWriter(csvfile, fieldnames=Data.keys())
+            writer.writerow(Data)  ## Utilisez writerow() pour écrire une seule ligne
             logging.info(f"Data written to {filename}")
         except Exception as e:
             logging.error(f"Error while writing to csv: {e}")

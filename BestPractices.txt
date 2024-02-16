@@ -3,3 +3,4 @@
 ## Noms de variables : camelCase
 ## Docstring : description des fonctions + input + output
 ## Commenter les parties importantes du code
+## Les bibliothèques dans les fichiers en ordre alphabétiques
