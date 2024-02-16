@@ -9,6 +9,7 @@ from Modules.DatabaseFunctions import Connect, Close, Execute, CreateTables
 from Modules.DateTime import wait_until, wait_until_tomorrow
 from Modules.Scraping import SupTradingScraperCAC40, SaveDataCsv
 from Modules.SendMail import SendMail
+import os
 from time import sleep as wait
 
 
@@ -32,8 +33,8 @@ logger = logging.getLogger(__name__)
 if __name__ == '__main__':
     logger.info('Starting main function')
     # CreateTables() # Uncomment this line to create the table only once
-    Data = SupTradingScraperCAC40(UrlCac40, {})
     while True:
+        Data = SupTradingScraperCAC40(UrlCac40, {})
         current_time = datetime.datetime.now().time()
         if current_time >= datetime.time(9, 0) and current_time <= datetime.time(18, 5):
             ## Save the data to the database
@@ -46,13 +47,21 @@ if __name__ == '__main__':
             ## Wait for 60 seconds before the next iteration
             wait(IterationTime*60)
         elif current_time > datetime.time(18, 5):
-            # Send email and stop program until 9am next day
+            ## Send email and stop program until 9am next day
             logger.info('Sending email and stopping program until 9am next day')
-            SaveDataCsv(Data, './Data/cac40.csv')
-            SendMail(["aghiles.saghir@supdevinci-edu.fr"], "SupTrading CAC40", "The program will wait until 9am next day", DataFile)
+            print(Data.keys())
+            SaveDataCsv(Data, DataFile)
+            SendMail(["aghiles.saghir@supdevinci-edu.fr"], "SupTrading CAC40 OFF", "Hi,\n\nJust to inform you that the program is off now. It will start again tomorrow at 9am.\n\nSupTradingBot", DataFile)
+            ## delete Data file if it exists
+            try:
+                os.remove(DataFile)
+            except:
+                logger.error('Error while deleting Data file after sending email')
+                pass
             wait_until_tomorrow(9, 0)  # Wait until 9am next day
             logger.info('Starting main function again')
         else:
-            # Wait until 9am to start the program
+            ## Wait until 9am to start the program
             wait_until(9, 0)
             logger.info('Starting main function again')
+            

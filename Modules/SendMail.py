@@ -60,8 +60,3 @@ def SendMail(To: list, Subject: str, Body: str, Attachment: str):
     except Exception as error:
         logger.error(f'{error}', exc_info=True)
         raise error
-
-
-# if __name__ == '__main__':
-#     SendMail(["saghiraghiles5032@gmail.com"], "Test", "Test", "./Data/cac40.csv")
-#     logger.info('Ending main function')
