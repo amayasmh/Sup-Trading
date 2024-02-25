@@ -1,52 +1,36 @@
 # Description : This module contains the function to send email with the data as attachment
 
 
-import configparser
+from Modules.ConfigParser import Config
+import datetime
 from email.message import EmailMessage
 import logging
 import smtplib
 
-## Variables
+# Variables
 ConfigFile = "./Config/config.ini"
 LogsFile = "./Logs/SupTrading.log"
 
-## Logging configuration
-logging.basicConfig(level=logging.INFO, filename=LogsFile,
+
+# Logging configuration
+logging.basicConfig(level=logging.INFO,
+                    filename= "./Logs/INFO_" + datetime.datetime.now().strftime("%Y%m%d") + ".log",
+                    filemode="a", format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+logging.basicConfig(level=logging.ERROR,
+                    filename= "./Logs/ERROR_" + datetime.datetime.now().strftime("%Y%m%d") + ".log",
                     filemode="a", format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-logging.basicConfig(level=logging.ERROR, filename= LogsFile,
-                    filemode="a", format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
 
-
-## function to read the email configuration file
-def Config(filename=ConfigFile, section='Mailing'):
-    Parser = configparser.ConfigParser()
+# Function to send email with the data as attachment
+def SendMail(Subject: str, Body: str, Attachment: str):
     try:
-        Parser.read(filename)
-    except Exception as error:
-        logger.error(f'{error}', exc_info=True)
-        raise error
-    email = {}
-    if Parser.has_section(section):
-        Params = Parser.items(section)
-        for Param in Params:
-            email[Param[0]] = Param[1]
-        logger.info('Email config loaded')
-    else:
-        logger.error('Error in loading parameters')
-        raise Exception(f'Section {section} not found in the {filename} file')
-    return email
-
-## function to send email with the data as attachment
-def SendMail(To: list, Subject: str, Body: str, Attachment: str):
-    try:
-        Email = Config()
+        Email = Config('Mailing')
         Msg = EmailMessage()
         Msg['Subject'] = Subject
         Msg['From'] = Email['user']
-        Msg['To'] = ", ".join(To)
+        Msg['To'] = Email['to']  # Utilisez la liste des destinataires spécifiée dans la configuration
         Msg.set_content(Body)
         with open(Attachment, 'rb') as File:
             Data = File.read()
