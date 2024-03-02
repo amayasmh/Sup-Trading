@@ -1,12 +1,12 @@
 # Version: 1.0
-# Project : SupTrading
+# Project : Sup'Trading
 # Description : Scraping CAC40 data from Boursorama website and save it to a database
 
 
 import datetime
 import logging
 from Modules.ConfigParser import Config
-from Modules.DatabaseFunctions import Connect, Close, Execute, CreateTableCac40, CreateTableCompanies
+from Modules.DatabaseFunctions import Connect, Close, Execute, CreateTableCac40, CreateTableCompanies, InsertDataCac40, InsertDataCompanies
 from Modules.DateTime import wait_until, wait_until_tomorrow
 from Modules.Scraping import SupTradingScraperCAC40, SupTradingScraperCAC40Company, SaveDataCsv
 from Modules.SendMail import SendMail
@@ -16,7 +16,7 @@ from time import sleep as wait
 
 # Variables
 ConfigFile = "./Config/config.ini"
-DataFile = "Data/cac40.csv"
+DataFile = "Data/SupTradingData_" + datetime.datetime.now().strftime("%Y%m%d%H%M%S") + ".csv"
 UrlCac40 = "https://www.boursorama.com/bourse/indices/cours/1rPCAC/" # CAC40 URL
 
 
@@ -31,58 +31,45 @@ logging.basicConfig(level=logging.ERROR,
 logger = logging.getLogger(__name__)
 
 
-# Main function
+# Main function to scrape data from Boursorama and save it to the database, send email and stop the program after 6pm and start again at 9am
 if __name__ == '__main__':
     logger.info('Starting main function')
     Urls_companies = Config('CAC40_Companies_Urls')
     Parameters = list(Config('Parameters').values())
     IterationTime = Parameters[0]
-    print(IterationTime)
-    CreateTableCac40()
-    CreateTableCompanies()
+    Conn, Cur = Connect()
+    CreateTableCac40(Conn, Cur)
+    CreateTableCompanies(Conn, Cur)
     while True:
         current_time = datetime.datetime.now().time()
-        ## Check if the current time is between 9am and 6:05pm to save the data to the database
         if current_time >= datetime.time(9, 0) and current_time <= datetime.time(18, 5):
+            if Conn is None or Cur is None:
+                Conn, Cur = Connect()
             for company in Urls_companies:
-                DataCompany = SupTradingScraperCAC40Company(Urls_companies[company], {'User-Agent': 'Mozilla/5.0'})
-                Conn = Connect()
-                Sql = "INSERT INTO COMPANIES (company, sector, price, variation, open, high, low, downward_limit, upward_limit, last_dividend, last_dividend_date, volume, valuation, capital, estimated_yield_2024, trade_date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-                Values = (DataCompany["company"], DataCompany["sector"], DataCompany["price"], DataCompany["variation"], DataCompany["open"], DataCompany["high"], DataCompany["low"], DataCompany["downward_limit"], DataCompany["upward_limit"], DataCompany["last_dividend"], DataCompany["last_dividend_date"], DataCompany["volume"], DataCompany["valuation"], DataCompany["capital"], DataCompany["estimated_yield_2024"], DataCompany["tradeDate"])
-                Execute(Conn, Sql, Values)
-                Close(Conn)
-                print(DataCompany)
-            ## Save the data to the database
-            Data = SupTradingScraperCAC40(UrlCac40, {'User-Agent': 'Mozilla/5.0'})
-            Conn = Connect()
-            Sql = "INSERT INTO CAC40 (company, price, variation, open, high, low, volume, trade_date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
-            Values = ("CAC40", Data["price"], Data["variation"], Data["open"], Data["high"], Data["low"], Data["volume"], Data["tradeDate"])
-            Execute(Conn, Sql, Values)
-            Close(Conn)
-            print(Data)
-            ## Wait for 60 seconds before the next iteration
+                InsertDataCompanies(Conn, Cur, SupTradingScraperCAC40Company(Urls_companies[company], {'User-Agent': 'Mozilla/5.0'}))
+            InsertDataCac40(Conn, Cur, SupTradingScraperCAC40(UrlCac40, {'User-Agent': 'Mozilla/5.0'}))
             wait(IterationTime*60)
-        ## Check if the current time is after 6:05pm to send an email and stop the program until 9am next day
         elif current_time > datetime.time(18, 5):
             logger.info('Sending email and stopping program until 9am next day')
             for company in Urls_companies:
-                DataCompany = SupTradingScraperCAC40Company(Urls_companies[company], {'User-Agent': 'Mozilla/5.0'})
-                print(DataCompany)
-                SaveDataCsv(DataCompany, DataFile)
-                continue
+                Data = SupTradingScraperCAC40Company(Urls_companies[company], {'User-Agent': 'Mozilla/5.0'})
+                print(Data)
+                SaveDataCsv(Data, DataFile)
             Data = SupTradingScraperCAC40(UrlCac40, {'User-Agent': 'Mozilla/5.0'})
             print(Data)
             SaveDataCsv(Data, DataFile)
-            SendMail("SupTrading CAC40 OFF", "Hi,\n\nJust to inform you that the program is off now. It will start again tomorrow at 9am.\n\nSupTradingBot", DataFile)
-            ## Delete Data file csv if it exists
+            SendMail("SupTrading CAC40 OFF", "Hi,\n\nJust to inform you that the program is off now. It will start again tomorrow at 9am.\nThe data is attached.\n\nSupTradingBot", DataFile)
             try:
                 os.remove(DataFile)
             except:
                 logger.error('Error while deleting Data file after sending email')
                 pass
-            wait_until_tomorrow(9, 0)  # Wait until 9am next day
+            Close(Conn, Cur)
+            wait_until_tomorrow(9, 0)
             logger.info('Starting main function again')
         else:
-            ## Wait until 9am to start the program
+            print('The program is off now. It will start again at 9am.')
+            logger.info('The program is off now. It will start again at 9am.')
+            Close(Conn, Cur)
             wait_until(9, 0)
             logger.info('Starting main function again')

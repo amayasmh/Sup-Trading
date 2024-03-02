@@ -211,5 +211,4 @@ def SupTradingScraperCAC40Company(url: str, header: dict):
         logging.error(f"Error while parsing volume: {e}")
         DataCompany['tradeDate'] = None
     logging.info("Company's scraper finished")
-    # print(CodeHtmlTmp)
     return DataCompany
