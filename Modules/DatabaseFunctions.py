@@ -8,8 +8,10 @@ import logging
 import psycopg2
 import psycopg2.extras
 
+
 # Variables
 ConfigFile = "./Config/config.ini"
+Conn, Cur = None, None
 
 
 # Logging configuration
@@ -22,28 +24,30 @@ logging.basicConfig(level=logging.ERROR,
                     filemode="a", format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
+
 # Function to connect to the database with connection object as return 
 def Connect():
     try:
         Params = Config('Postgresql')
         # print(params)
         logger.info('Connecting to the PostgreSQL database...')
-        try:
-            conn = psycopg2.connect(**Params)
-            logger.info('Connected to the PostgreSQL database')
-        except Exception as error:
-            logger.error(f'Error while connecting to the database: {error}', exc_info=True)
-            raise error
-        # close the communication with the PostgreSQL
-        return conn
     except (Exception, psycopg2.DatabaseError) as error:
         logger.error(f'{error}', exc_info=True)
         raise error
+    try:
+        Conn = psycopg2.connect(**Params)
+        Cursor = Conn.cursor()
+        logger.info('Connected to the PostgreSQL database')
+    except Exception as error:
+        logger.error(f'Error while connecting to the database: {error}', exc_info=True)
+        raise error
+    return Conn, Cursor
     
 # Function to close the database connection with connection object as input
-def Close(Conn):
+def Close(Conn, Cur):
     if Conn is not None:
         try:
+            Cur.close()
             Conn.close()
             logger.info('Database connection closed.')
         except Exception as error:
@@ -54,23 +58,22 @@ def Close(Conn):
         return Exception('Error closing database connection: connection is None')
     
 # Function to execute the sql query with connection object and sql query as input, returns true if successful
-def Execute(Conn, Sql, Data=None):
+def Execute(Conn, Cur, Sql, Data=None):
     try:
-        Cur = Conn.cursor()
         Cur.execute(Sql, Data)
         Conn.commit()
         logger.info('SQL executed successfully')
         # Result = Cur.fetchall()
-        Cur.close()
         return True
     except (Exception, psycopg2.DatabaseError) as error:
         logger.error(f'Error while executing query: {error}', exc_info=True)
         raise error
 
 # Function to create the tables in the database, executed only once at the beginning
-def CreateTableCac40():
+def CreateTableCac40(Conn, Cur):
+    if Conn is None or Cur is None:
+        Conn, Cur = Connect()
     try:
-        Connection = Connect()
         Query = '''
         CREATE TABLE IF NOT EXISTS CAC40 (
             id SERIAL PRIMARY KEY,
@@ -84,16 +87,28 @@ def CreateTableCac40():
             trade_date TIMESTAMP NOT NULL,
             save_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
         );'''
-        Execute(Connection, Query)
-        Close(Connection)
+        Execute(Conn, Cur, Query)
     except Exception as e:
         logging.error(f"Error while creating tables: {e}")
         raise e
-        
-# Function to insert the data of the companies in the database, executed every time the data is scraped
-def CreateTableCompanies():
+
+# Function to insert the data of the CAC40 in the database, executed every time the data is scraped
+def InsertDataCac40(Conn, Cur, Data):
+    if Conn is None or Cur is None:
+        Conn, Cur = Connect()
     try:
-        Connection = Connect()
+        Sql = "INSERT INTO CAC40 (company, price, variation, open, high, low, volume, trade_date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+        Values = ("CAC40", Data["price"], Data["variation"], Data["open"], Data["high"], Data["low"], Data["volume"], Data["tradeDate"])
+        Execute(Conn, Cur, Sql, Values)
+    except Exception as e:
+        logging.error(f"Error while inserting CAC40 data: {e}")
+        raise e
+
+# Function to create the tables in the database, executed only once at the beginning
+def CreateTableCompanies(Conn, Cur):
+    if Conn is None or Cur is None:
+        Conn, Cur = Connect()
+    try:
         Query = '''
         CREATE TABLE IF NOT EXISTS COMPANIES (
             id SERIAL PRIMARY KEY,
@@ -115,8 +130,20 @@ def CreateTableCompanies():
             trade_date TIMESTAMP NOT NULL,
             save_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
         );'''
-        Execute(Connection, Query)
-        Close(Connection)
+        Execute(Conn, Cur, Query)
     except Exception as e:
         logging.error(f"Error while creating tables: {e}")
         raise e
+    
+# Function to insert the data of the companies in the database, executed every time the data is scraped
+def InsertDataCompanies(Conn, Cur, Data):
+    if Conn is None or Cur is None:
+        Conn, Cur = Connect()
+    try:
+        Sql = "INSERT INTO COMPANIES (company, sector, price, variation, open, high, low, downward_limit, upward_limit, last_dividend, last_dividend_date, volume, valuation, capital, estimated_yield_2024, trade_date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        Values = (Data["company"], Data["sector"], Data["price"], Data["variation"], Data["open"], Data["high"], Data["low"], Data["downward_limit"], Data["upward_limit"], Data["last_dividend"], Data["last_dividend_date"], Data["volume"], Data["valuation"], Data["capital"], Data["estimated_yield_2024"], Data["tradeDate"])
+        Execute(Conn, Cur, Sql, Values)
+    except Exception as e:
+        logging.error(f"Error while inserting company data: {e}")
+        raise e
+    
