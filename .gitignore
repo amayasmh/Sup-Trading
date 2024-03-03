@@ -2,3 +2,4 @@ env
 .idea
 Logs
 __pycache__
+.csv

@@ -147,3 +147,5 @@ def InsertDataCompanies(Conn, Cur, Data):
         logging.error(f"Error while inserting company data: {e}")
         raise e
     
+# Test
+# InsertDataCac40(Conn, Cur, {'price': 1, 'variation': 1, 'open': 1, 'high': 1, 'low': 1, 'volume': 1, 'tradeDate': None})

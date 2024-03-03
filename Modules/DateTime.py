@@ -6,27 +6,23 @@ import time
 
 
 ## Wait until a specific time of the day
-def wait_until(hour, minute):
-    current_time = datetime.datetime.now().time()
-    target_time = datetime.time(hour, minute)
-    if current_time < target_time:
-        # Calculate the time difference until the target time
-        time_difference = datetime.datetime.combine(datetime.date.today(), target_time) - datetime.datetime.now()
-        # Convert the time difference to seconds
-        seconds_to_wait = time_difference.total_seconds()
-        # Wait until the target time
-        time.sleep(seconds_to_wait)
+import datetime
+import time
 
-## Wait until a specific time of the next day
-def wait_until_tomorrow(hour, minute):
+def WaitUntil(hour, minute):
     current_datetime = datetime.datetime.now()
     target_datetime = current_datetime.replace(hour=hour, minute=minute)
+    
+    # Si l'heure cible est déjà passée aujourd'hui, ajustez-la pour demain
     if current_datetime > target_datetime:
-        # Add one day to the target datetime
         target_datetime += datetime.timedelta(days=1)
-    # Calculate the time difference until the target datetime
+    
+    # Calculez la différence de temps jusqu'à l'heure cible
     time_difference = target_datetime - current_datetime
-    # Convert the time difference to seconds
+    
+    # Convertissez la différence de temps en secondes
     seconds_to_wait = time_difference.total_seconds()
-    # Wait until the target datetime
+    
+    # Attendez jusqu'à l'heure cible
+    print(f"Waiting {seconds_to_wait} seconds before next iteration")
     time.sleep(seconds_to_wait)

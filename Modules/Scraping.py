@@ -212,3 +212,10 @@ def SupTradingScraperCAC40Company(url: str, header: dict):
         DataCompany['tradeDate'] = None
     logging.info("Company's scraper finished")
     return DataCompany
+
+
+# Test
+# data = SupTradingScraperCAC40("https://www.boursorama.com/bourse/indices/cours/1rPCAC/", {'User-Agent': 'Mozilla/5.0'})
+# print(data)
+# data = SupTradingScraperCAC40Company("https://www.boursorama.com/cours/1rPLR/", {'User-Agent': 'Mozilla/5.0'})
+# print(data)
