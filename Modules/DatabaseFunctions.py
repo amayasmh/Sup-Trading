@@ -52,10 +52,8 @@ def Close(Conn, Cur):
             logger.info('Database connection closed.')
         except Exception as error:
             logger.error(f'{error}', exc_info=True)
-            return error
     else:
         logger.error('Error closing database connection: connection is None')
-        return Exception('Error closing database connection: connection is None')
     
 # Function to execute the sql query with connection object and sql query as input, returns true if successful
 def Execute(Conn, Cur, Sql, Data=None):
@@ -96,6 +94,7 @@ def CreateTableCac40(Conn, Cur):
 def InsertDataCac40(Conn, Cur, Data):
     if Conn is None or Cur is None:
         Conn, Cur = Connect()
+    print(Data)
     try:
         Sql = "INSERT INTO CAC40 (company, price, variation, open, high, low, volume, trade_date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
         Values = ("CAC40", Data["price"], Data["variation"], Data["open"], Data["high"], Data["low"], Data["volume"], Data["tradeDate"])
@@ -139,6 +138,7 @@ def CreateTableCompanies(Conn, Cur):
 def InsertDataCompanies(Conn, Cur, Data):
     if Conn is None or Cur is None:
         Conn, Cur = Connect()
+    print(Data)
     try:
         Sql = "INSERT INTO COMPANIES (company, sector, price, variation, open, high, low, downward_limit, upward_limit, last_dividend, last_dividend_date, volume, valuation, capital, estimated_yield_2024, trade_date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
         Values = (Data["company"], Data["sector"], Data["price"], Data["variation"], Data["open"], Data["high"], Data["low"], Data["downward_limit"], Data["upward_limit"], Data["last_dividend"], Data["last_dividend_date"], Data["volume"], Data["valuation"], Data["capital"], Data["estimated_yield_2024"], Data["tradeDate"])

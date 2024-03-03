@@ -36,7 +36,7 @@ if __name__ == '__main__':
     logger.info('Starting main function')
     Urls_companies = Config('CAC40_Companies_Urls')
     Parameters = list(Config('Parameters').values())
-    IterationTime = Parameters[0]
+    IterationTime = int(Parameters[0])
     Conn, Cur = Connect()
     CreateTableCac40(Conn, Cur)
     CreateTableCompanies(Conn, Cur)

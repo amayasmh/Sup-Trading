@@ -93,12 +93,12 @@ def SupTradingScraperCAC40(url: str, header: dict):
         logging.error(f"Error while parsing high: {e}")
         Data['high'] = None
     try: 
-        Data['low'] = CodeHtml.find('span', class_='c-instrument c-instrument--low').text.replace(' ', '')
+        Data['low'] = CodeHtml.find_all('span', class_='c-instrument c-instrument--low')[0].text.replace(' ', '')
     except Exception as e:
         logging.error(f"Error while parsing low: {e}")
         Data['low'] = None
     try:
-        Data['volume'] = CodeHtml.find('span', class_='c-instrument c-instrument--low').text.replace(' ', '')
+        Data['volume'] = int(CodeHtml.find_all('span', class_='c-instrument c-instrument--low')[1].text.replace(' ', '').replace('M€', '')) * 1000000
     except Exception as e:
         logging.error(f"Error while parsing volume: {e}")
         Data['volume'] = None
@@ -191,7 +191,7 @@ def SupTradingScraperCAC40Company(url: str, header: dict):
         logging.error(f"Error while parsing volume: {e}")
         DataCompany['volume'] = None
     try:
-        DataCompany["valuation"] = CodeHtmlTmp.find_all('p', class_='c-list-info__value u-color-big-stone')[6].text.replace(' ', '').replace('\n', '').replace('MEUR', '')
+        DataCompany["valuation"] = int(CodeHtmlTmp.find_all('p', class_='c-list-info__value u-color-big-stone')[6].text.replace(' ', '').replace('\n', '').replace('MEUR', '')) * 1000000
     except Exception as e:
         logging.error(f"Error while parsing volume: {e}")
         DataCompany['valuation'] = None
