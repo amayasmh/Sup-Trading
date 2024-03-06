@@ -24,5 +24,4 @@ def WaitUntil(hour, minute):
     seconds_to_wait = time_difference.total_seconds()
     
     # Attendez jusqu'à l'heure cible
-    print(f"Waiting {seconds_to_wait} seconds before next iteration")
     time.sleep(seconds_to_wait)

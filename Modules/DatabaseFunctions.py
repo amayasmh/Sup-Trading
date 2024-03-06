@@ -29,7 +29,6 @@ logger = logging.getLogger(__name__)
 def Connect():
     try:
         Params = Config('Postgresql')
-        # print(params)
         logger.info('Connecting to the PostgreSQL database...')
     except (Exception, psycopg2.DatabaseError) as error:
         logger.error(f'{error}', exc_info=True)
@@ -57,6 +56,8 @@ def Close(Conn, Cur):
     
 # Function to execute the sql query with connection object and sql query as input, returns true if successful
 def Execute(Conn, Cur, Sql, Data=None):
+    if Conn is None or Cur is None:
+        Conn, Cur = Connect()
     try:
         Cur.execute(Sql, Data)
         Conn.commit()
@@ -94,7 +95,6 @@ def CreateTableCac40(Conn, Cur):
 def InsertDataCac40(Conn, Cur, Data):
     if Conn is None or Cur is None:
         Conn, Cur = Connect()
-    print(Data)
     try:
         Sql = "INSERT INTO CAC40 (company, price, variation, open, high, low, volume, trade_date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
         Values = ("CAC40", Data["price"], Data["variation"], Data["open"], Data["high"], Data["low"], Data["volume"], Data["tradeDate"])
@@ -138,7 +138,6 @@ def CreateTableCompanies(Conn, Cur):
 def InsertDataCompanies(Conn, Cur, Data):
     if Conn is None or Cur is None:
         Conn, Cur = Connect()
-    print(Data)
     try:
         Sql = "INSERT INTO COMPANIES (company, sector, price, variation, open, high, low, downward_limit, upward_limit, last_dividend, last_dividend_date, volume, valuation, capital, estimated_yield_2024, trade_date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
         Values = (Data["company"], Data["sector"], Data["price"], Data["variation"], Data["open"], Data["high"], Data["low"], Data["downward_limit"], Data["upward_limit"], Data["last_dividend"], Data["last_dividend_date"], Data["volume"], Data["valuation"], Data["capital"], Data["estimated_yield_2024"], Data["tradeDate"])
@@ -147,5 +146,36 @@ def InsertDataCompanies(Conn, Cur, Data):
         logging.error(f"Error while inserting company data: {e}")
         raise e
     
-# Test
-# InsertDataCac40(Conn, Cur, {'price': 1, 'variation': 1, 'open': 1, 'high': 1, 'low': 1, 'volume': 1, 'tradeDate': None})
+# Function to create the tables in the database, executed only once at the beginning
+def CreateTablePerformance(Conn, Cur):
+    if Conn is None or Cur is None:
+        Conn, Cur = Connect()
+    try:
+        Query = '''
+        CREATE TABLE IF NOT EXISTS Performances (
+            id SERIAL PRIMARY KEY,
+            execute_time FLOAT,
+            save_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+        );'''
+        Execute(Conn, Cur, Query)
+    except Exception as e:
+        logging.error(f"Erreur lors de la création de la table : {e}")
+        raise e
+    
+# Function to insert the data of the performance in the database, executed every time the data is scraped
+def InsertDataPerformance(Conn, Cur, ExecutionTime):
+    if Conn is None or Cur is None:
+        Conn, Cur = Connect()
+    try:
+        Sql = "INSERT INTO Performances (execute_time) VALUES (%s)"
+        Values = (ExecutionTime,)  # Utiliser un tuple avec une virgule pour une seule valeur
+        Execute(Conn, Cur, Sql, Values)
+    except Exception as e:
+        logging.error(f"Erreur lors de l'insertion des données de performance : {e}")
+        raise e
+    
+# Function to create the tables in the database, executed only once at the beginning
+def CreateAllTables(Conn, Cur):
+    CreateTableCac40(Conn, Cur)
+    CreateTableCompanies(Conn, Cur)
+    CreateTablePerformance(Conn, Cur)
