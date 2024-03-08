@@ -11,17 +11,19 @@ import smtplib
 ConfigFile = "./Config/config.ini"
 LogsFile = "./Logs/SupTrading.log"
 
+# Configuration pour les messages d'information
+info_logger = logging.getLogger(__name__ + "_INFO")
+info_handler = logging.FileHandler("Logs/INFO_" + datetime.datetime.now().strftime("%Y%m%d") + ".log")
+info_handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))  # Définir le format
+info_logger.addHandler(info_handler)
+info_logger.setLevel(logging.INFO)  # Définir le niveau de journalisation
 
-# Logging configuration
-logging.basicConfig(level=logging.INFO,
-                    filename= "./Logs/INFO_" + datetime.datetime.now().strftime("%Y%m%d") + ".log",
-                    filemode="a", format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-
-logging.basicConfig(level=logging.ERROR,
-                    filename= "./Logs/ERROR_" + datetime.datetime.now().strftime("%Y%m%d") + ".log",
-                    filemode="a", format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
-
+# Configuration pour les messages d'erreur
+error_logger = logging.getLogger(__name__ + "_ERROR")
+error_handler = logging.FileHandler("Logs/ERROR_" + datetime.datetime.now().strftime("%Y%m%d") + ".log")
+error_handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))  # Définir le format
+error_logger.addHandler(error_handler)
+error_logger.setLevel(logging.ERROR)  # Définir le niveau de journalisation
 
 # Function to send email with the data as attachment
 def SendMail(Subject: str, Body: str, Attachment: str):
@@ -36,11 +38,11 @@ def SendMail(Subject: str, Body: str, Attachment: str):
             Data = File.read()
             FileName = File.name
         Msg.add_attachment(Data, maintype='application', subtype='octet-stream', filename=FileName)
-        logger.info('Sending email...')
+        info_logger.info('Sending email...')
         with smtplib.SMTP_SSL(Email['host'], Email['port']) as Server:
             Server.login(Email['user'], Email['password'])
             Server.send_message(Msg)
-        logger.info('Email sent')
+        info_logger.info('Email sent')
     except Exception as error:
-        logger.error(f'{error}', exc_info=True)
+        error_logger.error(f'{error}', exc_info=True)
         raise error

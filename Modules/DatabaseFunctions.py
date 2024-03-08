@@ -14,31 +14,34 @@ ConfigFile = "./Config/config.ini"
 Conn, Cur = None, None
 
 
-# Logging configuration
-logging.basicConfig(level=logging.INFO,
-                    filename= "./Logs/INFO_" + datetime.datetime.now().strftime("%Y%m%d") + ".log",
-                    filemode="a", format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+# Configuration pour les messages d'information
+info_logger = logging.getLogger(__name__ + "_INFO")
+info_handler = logging.FileHandler("Logs/INFO_" + datetime.datetime.now().strftime("%Y%m%d") + ".log")
+info_handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))  # Définir le format
+info_logger.addHandler(info_handler)
+info_logger.setLevel(logging.INFO)  # Définir le niveau de journalisation
 
-logging.basicConfig(level=logging.ERROR,
-                    filename= "./Logs/ERROR_" + datetime.datetime.now().strftime("%Y%m%d") + ".log",
-                    filemode="a", format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
-
+# Configuration pour les messages d'erreur
+error_logger = logging.getLogger(__name__ + "_ERROR")
+error_handler = logging.FileHandler("Logs/ERROR_" + datetime.datetime.now().strftime("%Y%m%d") + ".log")
+error_handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))  # Définir le format
+error_logger.addHandler(error_handler)
+error_logger.setLevel(logging.ERROR)  # Définir le niveau de journalisation
 
 # Function to connect to the database with connection object as return 
 def Connect():
     try:
         Params = Config('Postgresql')
-        logger.info('Connecting to the PostgreSQL database...')
+        info_logger.info('Connecting to the PostgreSQL database...')
     except (Exception, psycopg2.DatabaseError) as error:
-        logger.error(f'{error}', exc_info=True)
+        error_logger.error(f'{error}', exc_info=True)
         raise error
     try:
         Conn = psycopg2.connect(**Params)
         Cursor = Conn.cursor()
-        logger.info('Connected to the PostgreSQL database')
+        info_logger.info('Connected to the PostgreSQL database')
     except Exception as error:
-        logger.error(f'Error while connecting to the database: {error}', exc_info=True)
+        error_logger.error(f'Error while connecting to the database: {error}', exc_info=True)
         raise error
     return Conn, Cursor
     
@@ -48,11 +51,11 @@ def Close(Conn, Cur):
         try:
             Cur.close()
             Conn.close()
-            logger.info('Database connection closed.')
+            info_logger.info('Database connection closed.')
         except Exception as error:
-            logger.error(f'{error}', exc_info=True)
+            error_logger.error(f'{error}', exc_info=True)
     else:
-        logger.error('Error closing database connection: connection is None')
+        error_logger.error('Error closing database connection: connection is None')
     
 # Function to execute the sql query with connection object and sql query as input, returns true if successful
 def Execute(Conn, Cur, Sql, Data=None):
@@ -61,11 +64,11 @@ def Execute(Conn, Cur, Sql, Data=None):
     try:
         Cur.execute(Sql, Data)
         Conn.commit()
-        logger.info('SQL executed successfully')
+        info_logger.info('SQL executed successfully')
         # Result = Cur.fetchall()
         return True
     except (Exception, psycopg2.DatabaseError) as error:
-        logger.error(f'Error while executing query: {error}', exc_info=True)
+        error_logger.error(f'Error while executing query: {error}', exc_info=True)
         raise error
 
 # Function to create the tables in the database, executed only once at the beginning
@@ -78,7 +81,7 @@ def CreateTableCac40(Conn, Cur):
             id SERIAL PRIMARY KEY,
             company VARCHAR(255) NOT NULL,
             price FLOAT NOT NULL,
-            variation FLOAT NOT NULL,
+            variation FLOAT,
             open FLOAT NOT NULL,
             high FLOAT NOT NULL,
             low FLOAT NOT NULL,
@@ -114,7 +117,7 @@ def CreateTableCompanies(Conn, Cur):
             company VARCHAR(255) NOT NULL,
             sector VARCHAR(255) NOT NULL,
             price FLOAT NOT NULL,
-            variation FLOAT NOT NULL,
+            variation FLOAT,
             open FLOAT NOT NULL,
             high FLOAT NOT NULL,
             low FLOAT NOT NULL,
