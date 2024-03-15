@@ -26,7 +26,7 @@ error_logger.addHandler(error_handler)
 error_logger.setLevel(logging.ERROR)  # Définir le niveau de journalisation
 
 # Function to send email with the data as attachment
-def SendMail(Subject: str, Body: str, Attachment: str):
+def SendMail(Subject: str, Body: str, Attachment: str = None):
     try:
         Email = Config('Mailing')
         Msg = EmailMessage()
@@ -37,7 +37,8 @@ def SendMail(Subject: str, Body: str, Attachment: str):
         with open(Attachment, 'rb') as File:
             Data = File.read()
             FileName = File.name
-        Msg.add_attachment(Data, maintype='application', subtype='octet-stream', filename=FileName)
+        if Attachment is not None:
+            Msg.add_attachment(Data, maintype='application', subtype='octet-stream', filename=FileName)
         info_logger.info('Sending email...')
         with smtplib.SMTP_SSL(Email['host'], Email['port']) as Server:
             Server.login(Email['user'], Email['password'])

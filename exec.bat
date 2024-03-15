@@ -1,8 +1,8 @@
 @echo off
 
-set PYTHON_EXECUTABLE=D:\Documents\Github\Sup-Trading\env\Scripts\python.exe
+set PYTHON_EXECUTABLE=env/Scripts/python.exe
 
-set PYTHON_SCRIPT=D:\Documents\Github\Sup-Trading\SupTrading.py
+set PYTHON_SCRIPT=SupTrading.py
 
 %PYTHON_EXECUTABLE% %PYTHON_SCRIPT%
 
